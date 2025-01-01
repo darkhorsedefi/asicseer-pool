@@ -2101,8 +2101,24 @@ double le256todouble(const uchar * const target)
     return dcut64;
 }
 
+/* Converts a big endian 256 bit value to a double */
+double be256todouble(const uchar *target)
+{
+	uint64_t *data64;
+	double dcut64;
+	data64 = (uint64_t *)(target);
+	dcut64 = be64toh(*data64) * bits192;
+	data64 = (uint64_t *)(target + 8);
+	dcut64 += be64toh(*data64) * bits128;
+	data64 = (uint64_t *)(target + 16);
+	dcut64 += be64toh(*data64) * bits64;
+	data64 = (uint64_t *)(target + 24);
+	dcut64 += be64toh(*data64);
+	return dcut64;
+}
+
 /* Return a difficulty from a binary target */
-double diff_from_target(uchar *target)
+double diff_from_target(const uchar * const target)
 {
 	double dcut64;
 
